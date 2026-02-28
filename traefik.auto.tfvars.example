@@ -1,0 +1,5 @@
+# Copy this file to traefik.auto.tfvars and set the real IP.
+# This is the public IP of the host running Traefik.
+# It is injected as the content for all A records tagged comment="traefik".
+
+traefik_ip = "x.x.x.x"
