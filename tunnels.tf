@@ -9,3 +9,11 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "this" {
     prevent_destroy = true
   }
 }
+
+resource "cloudflare_zero_trust_tunnel_cloudflared" "extra" {
+  for_each   = var.tunnels_extra
+  account_id = var.account_id
+  name       = each.value.name
+  config_src = try(each.value.config_src, null)
+  lifecycle { prevent_destroy = true }
+}

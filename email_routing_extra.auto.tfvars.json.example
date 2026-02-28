@@ -1,0 +1,44 @@
+{
+  "email_routing_addresses_extra": {
+    "personal": {
+      "email": "personal@gmail.com"
+    }
+  },
+  "email_routing_rules_extra": {
+    "forward-contact": {
+      "name": "forward-contact",
+      "enabled": true,
+      "priority": 10,
+      "matchers": [
+        {
+          "type": "literal",
+          "field": "to",
+          "value": "contact@example.com"
+        }
+      ],
+      "actions": [
+        {
+          "type": "forward",
+          "value": ["personal@gmail.com"]
+        }
+      ]
+    },
+    "drop-noreply": {
+      "name": "drop-noreply",
+      "enabled": true,
+      "priority": 20,
+      "matchers": [
+        {
+          "type": "literal",
+          "field": "to",
+          "value": "noreply@example.com"
+        }
+      ],
+      "actions": [
+        {
+          "type": "drop"
+        }
+      ]
+    }
+  }
+}

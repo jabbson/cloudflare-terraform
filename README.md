@@ -23,7 +23,19 @@ source .env
 | `ZONE_ID` | Cloudflare zone ID for the domain |
 | `ACCOUNT_ID` | Cloudflare account ID |
 
-### 2. Traefik IP
+### 2. Extra resource files
+
+Copy the `.example` files for any resource types you want to manage via Terraform directly:
+
+```bash
+cp dns_extra.auto.tfvars.json.example dns_extra.auto.tfvars.json
+cp tunnels_extra.auto.tfvars.json.example tunnels_extra.auto.tfvars.json
+cp email_routing_extra.auto.tfvars.json.example email_routing_extra.auto.tfvars.json
+```
+
+These files are gitignored. Leave them as empty maps `{}` if you have nothing to add.
+
+### 3. Traefik IP
 
 Copy `traefik.auto.tfvars.example` to `traefik.auto.tfvars` and set your Traefik host IP:
 
@@ -65,10 +77,22 @@ terraform apply
 
 | File | Contents |
 |------|----------|
-| `dns.auto.tfvars.json` | All DNS records |
-| `tunnels.auto.tfvars.json` | Zero Trust tunnels |
-| `email_routing.auto.tfvars.json` | Email routing rules, addresses, catch-all |
-| `imports.tf` | Import blocks for every resource |
+| `dns.auto.tfvars.json` | All DNS records (excluding any in `dns_extra.auto.tfvars.json`) |
+| `tunnels.auto.tfvars.json` | Zero Trust tunnels (excluding any in `tunnels_extra.auto.tfvars.json`) |
+| `email_routing.auto.tfvars.json` | Email routing rules, addresses, catch-all (excluding any in `email_routing_extra.auto.tfvars.json`) |
+| `imports.tf` | Import blocks for every resource (same exclusions apply) |
+
+### Adding resources without generate.sh
+
+Each resource type has a hand-managed "extra" pool for Terraform-native creation. Edit the relevant file and run `terraform plan` → `terraform apply` — no dashboard, no API call, no `generate.sh` needed.
+
+| What to add | File to edit | Template |
+|-------------|-------------|----------|
+| DNS records | `dns_extra.auto.tfvars.json` | `dns_extra.auto.tfvars.json.example` |
+| Tunnels | `tunnels_extra.auto.tfvars.json` | `tunnels_extra.auto.tfvars.json.example` |
+| Email addresses + rules | `email_routing_extra.auto.tfvars.json` | `email_routing_extra.auto.tfvars.json.example` |
+
+All three files are gitignored — copy from the `.example` template to get started.
 
 ## Project structure
 
@@ -76,10 +100,11 @@ terraform apply
 |------|---------|
 | `providers.tf` | Cloudflare provider configuration |
 | `variables.tf` | Input variable declarations |
-| `dns.tf` | `cloudflare_dns_record.this` — iterates over `dns_records` map |
-| `tunnels.tf` | `cloudflare_zero_trust_tunnel_cloudflared.this` — iterates over `tunnels` map |
-| `email_routing.tf` | Email routing settings, addresses, rules, and catch-all |
+| `dns.tf` | DNS records — imported pool (`.this`) + hand-managed pool (`.extra`) |
+| `tunnels.tf` | Zero Trust tunnels — imported pool (`.this`) + hand-managed pool (`.extra`) |
+| `email_routing.tf` | Email routing settings, addresses, rules, catch-all — imported + extra pools |
 | `generate.sh` | Fetches live state from Cloudflare API, writes tfvars + imports |
+| `*.auto.tfvars.json.example` | Templates for hand-managed extra resource files (committed) |
 | `traefik.auto.tfvars` | Sets `traefik_ip` (gitignored — copy from example) |
 
 ## Notes

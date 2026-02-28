@@ -23,6 +23,9 @@ plan.txt
 *.auto.tfvars.json
 imports.tf
 
+# Example templates for hand-managed extra records — committed to git
+# (actual *.auto.tfvars.json files are gitignored; copy from .example and fill in)
+
 # Hand-managed but contains real server IP
 traefik.auto.tfvars
 

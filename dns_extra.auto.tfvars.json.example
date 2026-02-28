@@ -1,0 +1,17 @@
+{
+  "dns_extra_records": {
+    "myapp": {
+      "name": "myapp.example.com",
+      "type": "A",
+      "proxied": false,
+      "comment": "traefik"
+    },
+    "external": {
+      "name": "external.example.com",
+      "type": "A",
+      "content": "1.2.3.4",
+      "proxied": false,
+      "comment": "some external host"
+    }
+  }
+}

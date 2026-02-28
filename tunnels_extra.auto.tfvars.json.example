@@ -1,0 +1,12 @@
+{
+  "tunnels_extra": {
+    "my-local-tunnel": {
+      "name": "my-local-tunnel",
+      "config_src": "local"
+    },
+    "my-cf-tunnel": {
+      "name": "my-cf-tunnel",
+      "config_src": "cloudflare"
+    }
+  }
+}
